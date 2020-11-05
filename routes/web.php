@@ -12,5 +12,15 @@
 */
 
 Route::get('/', function () {
+
     return view('welcome');
 });
+
+Route::get('/info', function () {
+	phpinfo();
+});
+
+
+Route::get('/test1','TestController@test1');//测试1
+
+Route::get('/test2','TestController@test2');//测试2

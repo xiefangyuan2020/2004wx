@@ -25,6 +25,7 @@ Route::get('/test1','TestController@test1');//测试1
 
 Route::get('/test2','TestController@test2');//测试2
 
-Route::get('/Token','TestController@token');//token
+//Route::get('/Token','TestController@token');//token
 
-Route::get('/wx','WxController@index');//token
+Route::get('/wx','WxController@index');//微信接入
+Route::get('/wx/token','WxController@getAccessToken');//获取access_token

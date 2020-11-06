@@ -48,7 +48,7 @@ class WxController extends Controller
 	    	//保存到redis中时间为3600
 	    	
 	    	Redis::set($key,$token);
-	    	Redis::expire($key,5);
+	    	Redis::expire($key,1000);
     	}
 
     	

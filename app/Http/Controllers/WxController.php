@@ -41,7 +41,7 @@ class WxController extends Controller
     		$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".env('WX_APPID')."&secret=".env('WX_APPSEC');
 	    	//echo $url;die;
 	    	$response = file_get_contents($url);
-	    	echo $response;
+	    	//echo $response;
 	    	$data = json_decode($response,true);
 	    	$token = $data['access_token'];
 
@@ -54,6 +54,7 @@ class WxController extends Controller
     	
 
     	echo "access_token:".$token;
+
     }
 
 }

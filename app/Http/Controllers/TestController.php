@@ -26,36 +26,32 @@ class TestController extends Controller
    // 	echo md5(rand());
    // }
 
-   public function token(){
-      $echostr=request()->get('echostr','');
-      if($this->checkSignature() && !empty($echostr)){
-         echo $echostr;
-      }
-   }
+  //  public function token(){
+  //     $echostr=request()->get('echostr','');
+  //     if($this->checkSignature() && !empty($echostr)){
+  //        echo $echostr;
+  //     }
+  //  }
 
-private function checkSignature()
-{
-    $signature = $_GET["signature"];
-    $timestamp = $_GET["timestamp"];
-    $nonce = $_GET["nonce"];
-   
-    $token = "Token";
-    $tmpArr = array($token, $timestamp, $nonce);
-    sort($tmpArr, SORT_STRING);
-    $tmpStr = implode( $tmpArr );
-    $tmpStr = sha1( $tmpStr );
-    
-    if( $tmpStr == $signature ){
-        return true;
-    }else{
-        return false;
-    }
+  // private function checkSignature()
+  // {
+  //     $signature = $_GET["signature"];
+  //     $timestamp = $_GET["timestamp"];
+  //     $nonce = $_GET["nonce"];
+     
+  //     $token = "Token";
+  //     $tmpArr = array($token, $timestamp, $nonce);
+  //     sort($tmpArr, SORT_STRING);
+  //     $tmpStr = implode( $tmpArr );
+  //     $tmpStr = sha1( $tmpStr );
+      
+  //     if( $tmpStr == $signature ){
+  //         return true;
+  //     }else{
+  //         return false;
+  //     }
 
-}
-
-
-
-
+  // }
 
 
 }

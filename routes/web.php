@@ -27,4 +27,4 @@ Route::get('/test2','TestController@test2');//测试2
 
 Route::get('/Token','TestController@token');//token
 
-Route::get('/wx','TestController@index');//token
+Route::get('/wx','WxController@index');//token

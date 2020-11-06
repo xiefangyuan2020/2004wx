@@ -57,4 +57,24 @@ class WxController extends Controller
 
     }
 
+
+     public function wxEvent(){
+    	$signature = $_GET["signature"];
+	    $timestamp = $_GET["timestamp"];
+	    $nonce = $_GET["nonce"];
+		
+	    $token = env('WX_TOkEN');
+	    $tmpArr = array($token, $timestamp, $nonce);
+	    sort($tmpArr, SORT_STRING);
+	    $tmpStr = implode( $tmpArr );
+	    $tmpStr = sha1( $tmpStr );
+	    
+	    if( $tmpStr == $signature ){  //验证通过
+	        echo "";
+	    }else{
+	        echo "";
+	    }
+    }
+
+
 }

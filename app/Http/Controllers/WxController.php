@@ -76,7 +76,7 @@ class WxController extends Controller
 	    	//记录日志
 	   	    Log::info($xml_data);
 	    	$pos=simplexml_load_string($xml_data);
-	    	if ($pos->MsgType=="event") {
+	    	if ($pos->MsgType=="Event") {
 	    		if ($pos->Event=='subscribe') {
 	    		
 	    			$Content="谢谢关注";

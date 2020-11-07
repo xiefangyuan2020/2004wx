@@ -59,7 +59,7 @@ class WxController extends Controller
 
 
      public function wxEvent(){
-    	$signature = $_GET[55"signature"];
+    	$signature = $_GET["signature"];
 	    $timestamp = $_GET["timestamp"];
 	    $nonce = $_GET["nonce"];
 		

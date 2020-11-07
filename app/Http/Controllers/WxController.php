@@ -74,7 +74,7 @@ class WxController extends Controller
 	    	$xml_data = file_get_contents("php://input"); 
 
 	    	//记录日志
-	   	    Log::info($xml_data);
+	   	 //   Log::info($xml_data);
 	    	$pos=simplexml_load_string($xml_data);
 	    	if ($pos->MsgType=="event") {
 	    		if ($pos->Event=='subscribe') {

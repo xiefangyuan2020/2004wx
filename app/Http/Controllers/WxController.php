@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
-
+use log;
 class WxController extends Controller
 {
     //接入
@@ -74,15 +74,18 @@ class WxController extends Controller
 	    	$xml_data = file_get_contents("php://input"); 
 
 	    	//记录日志
-	    	file_put_contents('wx_event.log',$xml_data);
+	    	// file_put_contents('wx_event.log',$xml_data);
+	    	log::info($xml_data);
 
 	    	$pos=simplexml_load_string($xml_data);
-	    	if ($pos->Event=='subscribe') {
-	    		if ($pos->MsgType=="event") {
+	    	if ($pos->MsgType=="event") {
+	    		if ($pos->Event=='subscribe') {
+	    		
 	    			$Content="谢谢关注";
-	    		 $this->info($pos,$Content);	    			
-	    		}
-	    	}	    	
+	    		 $info = $this->info($pos,$Content);	    			
+	    		
+	    		}	
+	    	}    	
 	    }
     }
     public function info($pos,$Content){
@@ -95,7 +98,7 @@ class WxController extends Controller
 				<FromUserName><![CDATA[%s]]></FromUserName>
 				<CreateTime>%s</CreateTime>
 				<MsgType><![CDATA[%s]]></MsgType>
-				<Content><![CDATA[%s]]></Content>
+				<Content><![CDATA[".$Content."]]></Content>
 			</xml>";
 		$info=sprintf($xml,$ToUserName,$FormUserName,$CreateTime,$MsgType,$Content);
 		file_put_contents($info);

@@ -59,7 +59,7 @@ class WxController extends Controller
 
 
      public function wxEvent(){
-    	$signature = $_GET["signature"];
+    	$signature = $_GET[55"signature"];
 	    $timestamp = $_GET["timestamp"];
 	    $nonce = $_GET["nonce"];
 		
@@ -70,17 +70,20 @@ class WxController extends Controller
 	    $tmpStr = sha1( $tmpStr );
 	    
 	    if( $tmpStr == $signature ){  //验证通过
-	    	//1、接收数据
-	    	$xml_data = file_get_contents("php://input"); 
+	    	
 
 	    	//记录日志
-	    	file_put_contents('wx_event.log',$xml_data);
-	    	echo "";
-	    	die;
+	    	// file_put_contents('wx_event.log',$xml_data);
+	    	echo request()->get("echostr");
+	    	// die;
 
 	    	
 	    }else{
 	        echo "";
+	        //1、接收数据
+	    	$xml_data = file_get_contents("php://input"); 
+	    	file_put_contents("a.txt",$xml_data);
+	        $obj = simplexml_load_string($xml_data,"SimpleXMLElement",LIBXML_NOCDATA);
 	    }
     }
 

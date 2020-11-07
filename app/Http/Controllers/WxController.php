@@ -76,12 +76,13 @@ class WxController extends Controller
 	    	//记录日志
 	   	 //   Log::info($xml_data);
 	      $pos = simplexml_load_string($xml_data,"SimpleXMLElement",LIBXML_NOCDATA);
-	    			file_get_contents("aa.txt","ok");
 
 	    	//$pos=simplexml_load_string($xml_data);
 	    	if ($pos->MsgType=="event") {
 	    		if ($pos->Event=='subscribe') {
 	    			$Content="谢谢关注";
+	    			file_put_contents("aa.txt","ok");
+
 	    		echo  $this->info($pos,$Content);	    			
 	    		
 	    		}	

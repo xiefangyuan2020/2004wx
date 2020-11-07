@@ -87,16 +87,17 @@ class WxController extends Controller
 	    }
     }
     public function info($pos,$Content){
-    	$ToUserName=$pos->$FormUserName;
-    	$FormUserName=$pos->$ToUserName;
+    	$ToUserName=$pos->FormUserName;
+    	$FormUserName=$pos->ToUserName;
     	$CreateTime=time();
     	$MsgType="text";
-    	$xml="<xml><ToUserName><![CDATA[%s]></ToUserName>
-		<FromUserName><![CDATA[%s]]></FromUserName>
-		<CreateTime>%s</CreateTime>
-		<MsgType><![CDATA[%s]]></MsgType>
-		<Content><![CDATA[%s]]></Content>
-		</xml>";
+	    $xml="<xml>
+		    	<ToUserName><![CDATA[%s]></ToUserName>
+				<FromUserName><![CDATA[%s]]></FromUserName>
+				<CreateTime>%s</CreateTime>
+				<MsgType><![CDATA[%s]]></MsgType>
+				<Content><![CDATA[%s]]></Content>
+			</xml>";
 		$info=sprintf($xml,$ToUserName,$FormUserName,$CreateTime,$MsgType,$Content);
 		file_put_contents($info);
 		echo $info;

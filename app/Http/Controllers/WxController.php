@@ -81,7 +81,7 @@ class WxController extends Controller
 	    	if ($pos->Event=='subscribe') {
 	    		if ($pos->MsgType=="event") {
 	    			$Content="谢谢关注";
-	    	echo $this->info($pos,$Content);	    			
+	    		 $this->info($pos,$Content);	    			
 	    		}
 	    	}	    	
 	    }

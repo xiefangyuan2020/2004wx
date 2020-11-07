@@ -98,7 +98,7 @@ class WxController extends Controller
 		<Content><![CDATA[%s]]></Content>
 		</xml>";
 		$info=sprintf($xml,$ToUserName,$FormUserName,$CreateTime,$MsgType,$Content);
-		file_put_contents('wx_even.log',$info);
+		file_put_contents($info);
 		echo $info;
     }
 

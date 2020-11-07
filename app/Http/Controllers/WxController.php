@@ -99,7 +99,7 @@ class WxController extends Controller
 				<Content><![CDATA[".$Content."]]></Content>
 			</xml>";
 		$info=sprintf($xml,$ToUserName,$FormUserName,$CreateTime,$MsgType,$Content);
-		file_put_contents($info);
+		
 		echo $info;
     }
 

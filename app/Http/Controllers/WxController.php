@@ -70,21 +70,36 @@ class WxController extends Controller
 	    $tmpStr = sha1( $tmpStr );
 	    
 	    if( $tmpStr == $signature ){  //验证通过
-	    	
+	    	//1、接收数据
+	    	$xml_data = file_get_contents("php://input"); 
 
 	    	//记录日志
-	    	// file_put_contents('wx_event.log',$xml_data);
-	    	echo request()->get("echostr");
-	    	// die;
-
-	    	
-	    }else{
-	        echo "";
-	        //1、接收数据
-	    	$xml_data = file_get_contents("php://input"); 
-	    	file_put_contents("a.txt",$xml_data);
-	        $obj = simplexml_load_string($xml_data,"SimpleXMLElement",LIBXML_NOCDATA);
+	    	file_put_contents('wx_event.log',$xml_data);
+	    	echo "";
+	    	die;
+	    	$pos=simplexml_load_string($xml_data);
+	    	if ($pos->Event=='subscribe') {
+	    		if ($pos->MsgType=="event") {
+	    			$Content="谢谢关注";
+	    	$info=$this->info($pos,$Content);	    			
+	    		}
+	    	}	    	
 	    }
+    }
+    public function info($pos,$Content){
+    	$ToUserName=$pos->$FormUserName;
+    	$FormUserName=$pos->$ToUserName;
+    	$CreateTime=time();
+    	$MsgType="text";
+    	$xml="<xml><ToUserName><![CDATA[%s]></ToUserName>
+		<FromUserName><![CDATA[%s]]></FromUserName>
+		<CreateTime>%s</CreateTime>
+		<MsgType><![CDATA[%s]]></MsgType>
+		<Content><![CDATA[%s]]></Content>
+		</xml>";
+		$info=sprintf($xml,$ToUserName,$FormUserName,$CreateTime,$MsgType,$Content);
+		file_put_contents('wx_event.log',$info);
+		echo $info;
     }
 
 

@@ -79,7 +79,7 @@ class WxController extends Controller
 	    	//$pos=simplexml_load_string($xml_data);
 	    	if ($pos->MsgType=="event") {
 	    		if ($pos->Event=='subscribe') {
-	    		
+	    			file_get_contents("aa.txt","ok");
 	    			$Content="谢谢关注";
 	    		echo  $this->info($pos,$Content);	    			
 	    		

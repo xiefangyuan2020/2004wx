@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
-use log;
+use Log;
 class WxController extends Controller
 {
     //接入
@@ -74,9 +74,7 @@ class WxController extends Controller
 	    	$xml_data = file_get_contents("php://input"); 
 
 	    	//记录日志
-	    	// file_put_contents('wx_event.log',$xml_data);
-	    	log::info($xml_data);
-
+	   	    Log::info($xml_data);
 	    	$pos=simplexml_load_string($xml_data);
 	    	if ($pos->MsgType=="event") {
 	    		if ($pos->Event=='subscribe') {

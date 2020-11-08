@@ -88,24 +88,6 @@ class WxController extends Controller
                     $fromUser = $data->ToUserName;
                     $msgType = 'text';
                     $content = '欢迎关注了我';
-                    //根据OPENID获取用户信息（并且入库）
-                        //1.获取openid
-                    $token=$this->access_token();
-                    $url="https://api.weixin.qq.com/cgi-bin/user/info?access_token=".$token."&openid=".$toUser."&lang=zh_CN";
-                    file_put_contents('user_access.log',$url);
-                    $user=file_get_contents($url);
-                    $user=json_decode($user,true);
-                    $data=[
-                        'subscribe'=>$user['subscribe'],
-                        'openid'=>$user['openid'],
-                        'nickname'=>$user['nickname'],
-                        'sex'=>$user['sex'],
-                        'city'=>$user['city'],
-                        'country'=>$user['country'],
-                        'province'=>$user['province'],
-                        'language'=>$user['language'],
-                    ];
-                    WxUserModel::insert($data);
                     //%s代表字符串(发送信息)
                     $template = "<xml>
                             <ToUserName><![CDATA[%s]]></ToUserName>

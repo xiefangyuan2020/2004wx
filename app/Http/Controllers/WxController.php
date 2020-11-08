@@ -58,7 +58,7 @@ class WxController extends Controller
     }
 
 
-     public function wxEvent(Request request){
+     public function wxEvent(Request $request){
      	$echostr=$request->echostr;
     	$signature = $_GET["signature"];
 	    $timestamp = $_GET["timestamp"];

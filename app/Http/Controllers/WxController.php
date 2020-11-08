@@ -81,7 +81,6 @@ class WxController extends Controller
 	    	if ($pos->MsgType=="event") {
 	    		if ($pos->Event=='subscribe') {
 	    			$Content="谢谢关注";
-	    			file_put_contents("aa.txt","ok");
 
 	    		echo  $this->info($pos,$Content);	    			
 	    		

@@ -58,7 +58,8 @@ class WxController extends Controller
     }
 
 
-     public function wxEvent(){
+     public function wxEvent(Request request){
+     	$echostr=$request->echostr;
     	$signature = $_GET["signature"];
 	    $timestamp = $_GET["timestamp"];
 	    $nonce = $_GET["nonce"];
@@ -70,37 +71,56 @@ class WxController extends Controller
 	    $tmpStr = sha1( $tmpStr );
 	    
 	    if( $tmpStr == $signature ){  //验证通过
-	    	//1、接收数据
-	    	$xml_data = file_get_contents("php://input"); 
-
-	    	//记录日志
-	   	 //   Log::info($xml_data);
-	      $pos = simplexml_load_string($xml_data,"SimpleXMLElement",LIBXML_NOCDATA);
-	    	//$pos=simplexml_load_string($xml_data);
-	    	if ($pos->MsgType=="event") {
-	    		if ($pos->Event=='subscribe') {
-	    			$Content="谢谢关注";
-	    		echo  $this->info($pos,$Content);	    			
-	    		
-	    		}	
-	    	}    	
-	    }
-    }
-    public function info($pos,$Content){
-    	$ToUserName=$pos->FormUserName;
-    	$FormUserName=$pos->ToUserName;
-    	$CreateTime=time();
-    	$MsgType="text";
-	    $xml="<xml>
-		    	<ToUserName><![CDATA[%s]></ToUserName>
-				<FromUserName><![CDATA[%s]]></FromUserName>
-				<CreateTime>%s</CreateTime>
-				<MsgType><![CDATA[%s]]></MsgType>
-				<Content><![CDATA[%s]]></Content>
-			</xml>";
-		$info=sprintf($xml,$ToUserName,$FormUserName,$CreateTime,$MsgType,$Content);
-		echo $info;
-    }
-
+	    	 //1.接收数据
+            $xml_str = file_get_contents('php://input');
+            //记录日志
+//            file_put_contents('wx_event.log',$xml_str,'FILE_APPEND');
+//            echo "$echostr";
+//            die;
+            //2.把xml文本转换成php的数组或者对象
+            $data = simplexml_load_string($xml_str, 'SimpleXMLElement', LIBXML_NOCDATA);
+            //判断该数据包是否是订阅的事件推送
+            if (strtolower($data->MsgType) == "event") {
+                //关注
+                if (strtolower($data->Event == 'subscribe')) {
+                    //回复用户消息(纯文本格式)
+                    $toUser = $data->FromUserName;
+                    $fromUser = $data->ToUserName;
+                    $msgType = 'text';
+                    $content = '欢迎关注了我';
+                    //根据OPENID获取用户信息（并且入库）
+                        //1.获取openid
+                    $token=$this->access_token();
+                    $url="https://api.weixin.qq.com/cgi-bin/user/info?access_token=".$token."&openid=".$toUser."&lang=zh_CN";
+                    file_put_contents('user_access.log',$url);
+                    $user=file_get_contents($url);
+                    $user=json_decode($user,true);
+                    $data=[
+                        'subscribe'=>$user['subscribe'],
+                        'openid'=>$user['openid'],
+                        'nickname'=>$user['nickname'],
+                        'sex'=>$user['sex'],
+                        'city'=>$user['city'],
+                        'country'=>$user['country'],
+                        'province'=>$user['province'],
+                        'language'=>$user['language'],
+                    ];
+                    WxUserModel::insert($data);
+                    //%s代表字符串(发送信息)
+                    $template = "<xml>
+                            <ToUserName><![CDATA[%s]]></ToUserName>
+                            <FromUserName><![CDATA[%s]]></FromUserName>
+                            <CreateTime>%s</CreateTime>
+                            <MsgType><![CDATA[%s]]></MsgType>
+                            <Content><![CDATA[%s]]></Content>
+                            </xml>";
+                    $info = sprintf($template, $toUser, $fromUser, time(), $msgType, $content);
+                    return $info;
+                }
+                //取关
+                if (strtolower($data->Event == 'unsubscribe')) {
+                    //清除用户的信息
+                }
+            }
 
 }

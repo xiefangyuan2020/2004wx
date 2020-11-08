@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
-use Log;
+
 class WxController extends Controller
 {
 	//接入
@@ -90,7 +90,7 @@ class WxController extends Controller
 					$toUser = $data->FromUserName;
 					$fromUser = $data->ToUserName;
 					$msgType = 'text';
-					$content = '欢迎关注了我';
+					$content = '欢迎您的关注٩(๑❛ᴗ❛๑)۶';
 					//%s代表字符串(发送信息)
 					$template = "<xml>
                             <ToUserName><![CDATA[%s]]></ToUserName>

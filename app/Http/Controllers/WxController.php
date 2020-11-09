@@ -150,7 +150,7 @@ class WxController extends Controller
                             <MsgType><![CDATA[%s]]></MsgType>
                             <Content><![CDATA[%s]]></Content>
                             </xml>";
-		$info = sprintf($template, $toUser, $fromUser, time(), $msgType, $content);
+		$info = sprintf($template,$toUser, $fromUser, time(), $msgType, $content);
 		echo $info;
 	}
 

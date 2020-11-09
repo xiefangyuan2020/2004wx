@@ -22,7 +22,7 @@ Route::get('/info', function () {
 
 
 Route::prefix('/wx')->group(function(){
-	Route::match(['get','post'],'/wx','WxController@wxEvent');//微信接入
+	Route::match(['get','post'],'/','WxController@wxEvent');//微信接入
 	Route::get('/token','WxController@getAccessToken');//获取access_token
 	Route::get('/guzzle2','WxController@guzzle2'); //  /test/guzzle2
 });

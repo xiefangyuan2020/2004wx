@@ -125,7 +125,9 @@ class WxController extends Controller
 				case "text":
 					//把天气截取出来，后面是天气的地址
 					$tq = str_replace("天气:","",$data->Content);
+					echo $this->Text($data,$tq);
 					$key = "2f3d1615c28f0a5bc54da5082c4c1c0c";
+
 				break;
 			}
 

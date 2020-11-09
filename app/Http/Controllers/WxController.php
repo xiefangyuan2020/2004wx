@@ -141,7 +141,7 @@ class WxController extends Controller
 						$content .= "风向".$dtian["direct"]."\n";
 						$content .= "风力".$dtian["power"]."\n";
 						$content .="以下是未来天气状况"."\n";
-						$aa = $dtian["result"]["future"];
+						$aa = $jm["result"]["future"];
 							foreach($aa as $k=>$v){
 								$content .= date("Y-m-d",strtotime($v["date"])).":";
 								$content .= $v["temperature"].",";

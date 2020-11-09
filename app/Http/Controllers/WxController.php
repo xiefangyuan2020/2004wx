@@ -124,9 +124,34 @@ class WxController extends Controller
 			switch($data->MsgType){
 				case "text":
 					//把天气截取出来，后面是天气的地址
-					$tq = str_replace("天气:","",$data->Content);
-					echo $this->Text($data,$tq);
+					$tq = urlencode(str_replace("天气:","",$data->Content));
+					//echo $this->Text($data,$tq);
 					$key = "2f3d1615c28f0a5bc54da5082c4c1c0c";
+					$url = "http://apis.juhe.cn/simpleWeather/query?city=".$tq."&key=".$key;
+					$cr = file_get_contents($url);
+					$jm = json_decode($cr,true);
+					if($jm["error_code"]==0){
+						//走到这儿说明成功
+						$content = "";
+						$content .= $jm["result"]["city"]."当前天气"."\n";//查询城市
+						$dangtian = $jm["result"]["realtime"];
+						$content .= "温度".$jm["temperature"]."\n";
+						$content .= "湿度".$jm["humidity"]."\n";
+						$content .= "天气情况".$jm["info"]."\n";
+						$content .= "风向".$jm["direct"]."\n";
+						$content .= "风力".$jm["power"]."\n";
+						$content .="以下是未来天气状况"."\n";
+						$aa = $jm["result"]["future"];
+							foreach($aa as $k=>$v){
+								$content .= data("Y-m-d",strtotime($v["date"])).":";
+								$content .= $v["temperature"].",";
+								$content .= $v["weather"].",";
+								$content .= $v["direct"]."\n";
+							}
+						echo $this->Text($data,$content);
+					}else{
+						echo $this->Text($data,$content="错误");
+					}
 
 				break;
 			}

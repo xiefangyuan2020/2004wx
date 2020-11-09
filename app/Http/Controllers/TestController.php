@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use DB;
 use Illuminate\Support\Facades\Redis;
+use GuzzleHttp\Client;
 
 class TestController extends Controller
 {
@@ -55,13 +56,49 @@ class TestController extends Controller
 
 
 
-  public function test3(){
-    print_r($_GET);
+  // public function test3(){
+  //   print_r($_GET);
+  // }
+
+  // public function test4(){
+  //   //print_r($_POST);
+
+  // }
+
+  public function guzzle1(){
+
+
+    $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".env('WX_APPID')."&secret=".env('WX_APPSEC');
+      //echo $url;
+
+    //使用guzzle发起get请求
+    $client = new Client(); //实例化 客户端
+
+    $response = $client->request('GET',$url,['verify'=>false]); //发起请求并接收响应
+
+    $json_str = $response->getBody();  //服务器的响应数据
+    echo $json_str;
+
+
   }
 
-  public function test4(){
-    //print_r($_POST);
-    
+  public function guzzle2(){
+    $access_token = "";
+    $type = 'image';
+    $url = 'https https://api.weixin.qq.com/cgi-bin/media/upload?access_token='.$access_token.'&type='.$type;
+    //使用guzzle发起get请求
+    $client = new Client(); //实例化 客户端
+    $response = $client->request('POST',$url,[
+        'verify'=>false,
+        'multipart'=>[
+          [
+            'name'=>'media',
+            'contents' => fopen('5.jpg','r') //上传文件路径
+          ],
+        ]
+    ]); //发起请求并接收响应
+    $data = $response->getBody();
+    echo $data;
   }
 
 }

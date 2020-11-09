@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
-use Log;
+
+use GuzzleHttp\Client;
 
 class WxController extends Controller
 {
@@ -41,12 +42,20 @@ class WxController extends Controller
 			echo '</br>';
 			echo $token;
 		} else {
-			echo "无缓存";
+			// echo "无缓存";
 			$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" . env('WX_APPID') . "&secret=" . env('WX_APPSEC');
 			//echo $url;die;
-			$response = file_get_contents($url);
+			// $response = file_get_contents($url);
 			//echo $response;
-			$data = json_decode($response, true);
+
+			//使用guzzle发起get请求
+		    $client = new Client(); //实例化 客户端
+		    $response = $client->request('GET',$url,['verify'=>false]); //发起请求并接收响应
+		    $json_str = $response->getBody();  //服务器的响应数据
+		    //echo $json_str;die;
+
+
+			$data = json_decode($json_str, true);
 			$token = $data['access_token'];
 
 			//保存到redis中时间为3600
@@ -56,8 +65,28 @@ class WxController extends Controller
 		}
 
 
-		echo "access_token:" . $token;
+		return $token;
 
+	}
+
+	//上传素材
+	public function guzzle2(){
+		$access_token = $this->getAccessToken();
+		$type = 'image';
+		$url = 'https://api.weixin.qq.com/cgi-bin/media/upload?access_token='.$access_token.'&type='.$type;
+		//使用guzzle发起get请求
+		$client = new Client(); //实例化 客户端
+		$response = $client->request('POST',$url,[
+			'verify'=>false,
+			'multipart'=>[
+				[
+					'name'=>'media',
+					'contents' => fopen('5.jpg','r') //上传文件路径
+				],
+			]
+		]); //发起请求并接收响应
+		$data = $response->getBody();
+		echo $data;
 	}
 
 
@@ -87,49 +116,43 @@ class WxController extends Controller
 			if (strtolower($data->MsgType) == "event") {
 				//关注
 				if (strtolower($data->Event == 'subscribe')) {
-					//回复用户消息(纯文本格式)
-					$toUser = $data->FromUserName;
-					$fromUser = $data->ToUserName;
-					$msgType = 'text';
-					$content = '欢迎您的关注٩(๑❛ᴗ❛๑)۶';
-					//%s代表字符串(发送信息)
-					$template = "<xml>
+					$content = "欢迎您的关注";
+					$this->Text($data,$content);
+				}
+
+			}
+			switch($data->MsgType){
+				case "text":
+					//把天气截取出来，后面是天气的地址
+					$tq = str_replace("天气:","",$data->Content);
+					$key = "2f3d1615c28f0a5bc54da5082c4c1c0c";
+				break;
+			}
+
+
+		}
+
+
+
+	}
+
+	//回复文本消息
+	public  function  Text($data,$content){
+		//回复用户消息(纯文本格式)
+		$toUser = $data->FromUserName;
+		$fromUser = $data->ToUserName;
+		$msgType = 'text';
+		//%s代表字符串(发送信息)
+		$template = "<xml>
                             <ToUserName><![CDATA[%s]]></ToUserName>
                             <FromUserName><![CDATA[%s]]></FromUserName>
                             <CreateTime>%s</CreateTime>
                             <MsgType><![CDATA[%s]]></MsgType>
                             <Content><![CDATA[%s]]></Content>
                             </xml>";
-					$info = sprintf($template, $toUser, $fromUser, time(), $msgType, $content);
-					return $info;
-				}
-				//取关
-				// if (strtolower($data->Event == 'unsubscribe')) {
-				// 	//清除用户的信息
-				// }
-			}
-		}
+		$info = sprintf($template, $toUser, $fromUser, time(), $msgType, $content);
+		echo $info;
 	}
-
-
-
-			// if($obj->MsgType=="text"){
-   //              $city = $obj->Content; //获取输入的内容
-   //              //调天气预报的接口
-   //              //调用表接口，是一个json字符串
-   //              $result = file_get_contents($url);
-   //              //将结果json字符串转化成数组
-   //              $result = json_decode($result,true);
-   //              if($result["success"]==1){
-   //                  //接口调用成功，返回天气预报
-   //                  $content = "";
-   //                  foreach($result["result"] as $key=>$v){
-   //                      $content .= $v["days"].",".$v["week"].",".$v["weather"].",".$v["temperature"]."\n";
-   //                 }
-   //              }else{
-   //                  $content = "获取天气失败";
-   //              }
-   //          }
 
 
 

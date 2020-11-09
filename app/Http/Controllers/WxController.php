@@ -103,8 +103,15 @@ class WxController extends Controller
 					$info = sprintf($template, $toUser, $fromUser, time(), $msgType, $content);
 					return $info;
 				}
-			
-		}
+				//取关
+				// if (strtolower($data->Event == 'unsubscribe')) {
+				// 	//清除用户的信息
+				// }
+			}
+		} 
+		// else {
+		// 	return false;
+		// }
 	}
 
 

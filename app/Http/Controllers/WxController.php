@@ -108,11 +108,31 @@ class WxController extends Controller
 				// 	//清除用户的信息
 				// }
 			}
+		}else{
+			if($obj->MsgType=="text"){
+                $city = $obj->Content; //获取输入的内容
+                //调天气预报的接口
+                //调用表接口，是一个json字符串
+                $result = file_get_contents($url);
+                //将结果json字符串转化成数组
+                $result = json_decode($result,true);
+                if($result["success"]==1){
+                    //接口调用成功，返回天气预报
+                    $content = "";
+                    foreach($result["result"] as $key=>$v){
+                        $content .= $v["days"].",".$v["week"].",".$v["weather"].",".$v["temperature"]."\n";
+                   }
+                }else{
+                    $content = "获取天气失败";
+                }
+            }
 		} 
-		// else {
-		// 	return false;
-		// }
+
 	}
+
+
+
+
 
 
 }

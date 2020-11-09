@@ -54,4 +54,14 @@ class TestController extends Controller
   // }
 
 
+
+  public function test3(){
+    print_r($_GET);
+  }
+
+  public function test4(){
+    //print_r($_POST);
+    
+  }
+
 }

@@ -111,5 +111,82 @@ class WxController extends Controller
 			return false;
 		}
 	}
+
+	//接收消息
+    $obj=$this->receiveMsg();
+    switch($obj->MsgType){
+    case "text":
+        //获取城市的名称
+        $city=urlencode($obj->Content);
+        $key="97e7508b0d7a44b957eddf115df0101e";
+                       //使用get方式往第三方服务器上发送请求
+                       $url="http://v.juhe.cn/weather/index?cityname=".$city."&key=".$key;
+                       $result = json_decode(file_get_contents($url),true);
+                       if($result["resultcode"]==200){
+                           //查询天气预报成功
+                           //今天的数据
+                           $today=$result["result"]["today"];
+                           $content="查询的城市:".$today["city"]."\n";
+                           $content.="今天的日期是".$today["date_y"]." ".$today["week"]."\n";
+                           $content.="天气:".$today["weather"]."温度:".$today["temperature"]."\n";
+                           $content.="风级指数:".$today["wind"]."\n";
+                           $content.="温度:".$today["dressing_advice"].",穿衣指数:".$today["dressing_advice"]."\n";
+                           //未来七天
+                           $future=$result["result"]["future"];
+                           foreach($future as $key=>$val){
+                               $content.=date("Y-m-d",strtotime($val["date"])).":";
+                               $content.=$val["week"].",";
+                               $content.= $val["weather"].",";
+                               $content.=$val["weather"]."\n";
+                           }
+                       }else{
+                           $content="查询错误,你的格式是:天气:地区名，请检查中国有没有这个城市";
+                       }
+                       //回复
+                       $this->responseText($obj,$content);
+                       break;
+                   case "voice":
+                       //开启语音识别后获取到了用户发的语音转化为汉字。
+                       $text=urlencode($obj->Recognition);//将汉字转码
+                       //调用图灵机器人的接口
+                       $url="http://openapi.tuling123.com/openapi/api/v2";
+                       //整理请求接口的数据
+                       $param=[
+                           "reqType"=>0,
+                           "perception"=>[
+                               "inputText"=>[
+                                   "text"=>$text
+                               ]
+                           ],
+                           "userInfo"=>[
+                               "apiKey"=>"cf377b0562294eaab219780a3703d478",
+                               "userId"=>1
+                           ]
+                       ];
+                       $param=urldecode(json_encode($param));
+                       //使用curl往接口url上面发送post请求
+                       $result=$this->http_post($url,$param);
+                       //将json格式的数据转化为数组
+                       $result=json_decode($result,true);
+                       if($result["intent"]["code"]!=5000){
+                           $content=$result["results"][0]["values"]["text"];
+                           $this->responseText($obj,$content);
+                       }else{
+                           $content="机器人出错，请联系管理员,123456789";
+                           $this->responseText($obj,$content);
+                       }
+                       break;
+               }
+
+	//接收微信公众平台传过来的消息
+    private function  receiveMsg(){
+    //获取到微信公众平台发过来的消息，是个xml格式的数据
+        $xml=file_get_contents("php://input");
+        //为了方便操作我们将xml转化为对象。
+        $obj=simplexml_load_string($xml,"SimpleXMLElement",LIBXML_NOCDATA);
+        //返回
+        return $obj;
+    }
+
 }
 

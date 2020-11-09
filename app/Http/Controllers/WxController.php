@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use Log;
 
 class WxController extends Controller
 {
@@ -111,5 +112,26 @@ class WxController extends Controller
 			return false;
 		}
 	}
+
+
+	  //回复天气
+   public function getweather(){
+
+       $ip = request()->getClientIP();
+       Log::info('===='.$ip);
+       $url = 'http://api.k780.com:88/?app=weather.future&weaid='.$ip.'&&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json';
+       $weather = file_get_contents($url);
+       $weather = json_decode($weather,true);
+       if($weather['success']){
+           $content = '';
+           foreach($weather['result'] as $v){
+               $content .= '地区:'.$v['citynm'].'日期:'.$v['days'].$v['week'].'当日温度:'.$v['temperature'].'天气:'.$v['weather'].'风向:'.$v['wind'];
+           }
+       }
+       Log::info('==='.$content);
+       return $content;
+   }
+
+
 }
 

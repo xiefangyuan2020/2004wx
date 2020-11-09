@@ -117,7 +117,7 @@ class WxController extends Controller
 				//关注
 				if (strtolower($data->Event == 'subscribe')) {
 					$content = "欢迎您的关注";
-					$this->Text($data,$content);
+					echo $this->Text($data,$content);
 				}
 
 			}

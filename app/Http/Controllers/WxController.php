@@ -134,23 +134,24 @@ class WxController extends Controller
 						//走到这儿说明成功
 						$content = "";
 						$content .= $jm["result"]["city"]."当前天气"."\n";//查询城市
-						$dangtian = $jm["result"]["realtime"];
-						$content .= "温度".$jm["temperature"]."\n";
-						$content .= "湿度".$jm["humidity"]."\n";
-						$content .= "天气情况".$jm["info"]."\n";
-						$content .= "风向".$jm["direct"]."\n";
-						$content .= "风力".$jm["power"]."\n";
+						$dtian = $jm["result"]["realtime"];
+						$content .= "温度".$dtian["temperature"]."\n";
+						$content .= "湿度".$dtian["humidity"]."\n";
+						$content .= "天气情况".$dtian["info"]."\n";
+						$content .= "风向".$dtian["direct"]."\n";
+						$content .= "风力".$dtian["power"]."\n";
 						$content .="以下是未来天气状况"."\n";
-						$aa = $jm["result"]["future"];
+						$aa = $dtian["result"]["future"];
 							foreach($aa as $k=>$v){
-								$content .= data("Y-m-d",strtotime($v["date"])).":";
+								$content .= date("Y-m-d",strtotime($v["date"])).":";
 								$content .= $v["temperature"].",";
 								$content .= $v["weather"].",";
 								$content .= $v["direct"]."\n";
 							}
 						echo $this->Text($data,$content);
 					}else{
-						echo $this->Text($data,$content="错误");
+						$content = "错误";
+						echo $this->Text($data,$content);
 					}
 
 				break;

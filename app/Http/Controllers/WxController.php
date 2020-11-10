@@ -117,9 +117,21 @@ class WxController extends Controller
 			if (strtolower($data->MsgType) == "event") {
 				//关注
 				if (strtolower($data->Event == 'subscribe')) {
-					 $array = ['欢迎您关注','茶花小铺欢迎您','有什么帮助您的吗?'];
+					 $array = ['欢迎您的关注','茶花小铺欢迎您','有什么帮助您的吗?'];
                     $content = $array[array_rand($array)];
 					echo $this->Text($data,$content);
+				}
+
+				//自定义菜单栏
+				if(strtolower($data->Event=='CLICK')){
+					$eventKey = $data->EventKey;
+					switch ($eventKey) {
+						case 'V1001_TODAY_MUSIC':
+							$array = ['鹦鹉','水瓶','拥抱夏天'];
+							$content = $array[array_rand($array)];
+							$this->Text($data,$content);
+							break;
+					}
 				}
 
 			}
@@ -187,6 +199,9 @@ class WxController extends Controller
 			    }]
 		    }]
 		}';
+		$access_token = $this->getAccessToken();
+		$url = " https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$access_token;
+		$res = $this->curl($url,$menu);
 	}
 
 
@@ -209,6 +224,22 @@ class WxController extends Controller
 	}
 
 
+	public function curl($url,$menu){
+        //1.初始化
+        $ch = curl_init();
+        //2.设置
+        curl_setopt($ch,CURLOPT_URL,$url);//设置提交地址
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);//设置返回值返回字符串
+        curl_setopt($ch,CURLOPT_POST,1);//post提交方式
+        curl_setopt($ch,CURLOPT_POSTFIELDS,$menu);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,false);
+        //3.执行
+        $output = curl_exec($ch);
+        //4.关闭
+        curl_close($ch);
+        return $output;
+    }
 
 
 }

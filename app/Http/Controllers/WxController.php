@@ -90,6 +90,7 @@ class WxController extends Controller
 	}
 
 
+	//回复消息
 	public function wxEvent(Request $request)
 	{
 		$echostr = $request->echostr;
@@ -150,19 +151,43 @@ class WxController extends Controller
 							}
 						echo $this->Text($data,$content);
 					}else{
+						
 						$content = "错误";
 						echo $this->Text($data,$content);
 					}
 
 				break;
 			}
-
-
 		}
-
-
-
 	}
+
+
+	//自定义菜单栏
+	public function createMenu(){
+		$menu = '{
+			"button":[
+			    {	
+			        "type":"click",
+			        "name":"今日歌曲",
+			        "key":"V1001_TODAY_MUSIC"
+			    },
+			    {
+			        "name":"菜单",
+			        "sub_button":[
+			    {	
+			        "type":"view",
+			        "name":"搜索",
+			        "url":"http://www.soso.com/"
+			    },
+			    {
+			        "type":"click",
+			        "name":"赞一下我们",
+			        "key":"V1001_GOOD"
+			    }]
+		    }]
+		}';
+	}
+
 
 	//回复文本消息
 	public  function  Text($data,$content){
@@ -172,12 +197,12 @@ class WxController extends Controller
 		$msgType = 'text';
 		//%s代表字符串(发送信息)
 		$template = "<xml>
-                            <ToUserName><![CDATA[%s]]></ToUserName>
-                            <FromUserName><![CDATA[%s]]></FromUserName>
-                            <CreateTime>%s</CreateTime>
-                            <MsgType><![CDATA[%s]]></MsgType>
-                            <Content><![CDATA[%s]]></Content>
-                            </xml>";
+                        <ToUserName><![CDATA[%s]]></ToUserName>
+                        <FromUserName><![CDATA[%s]]></FromUserName>
+                        <CreateTime>%s</CreateTime>
+                        <MsgType><![CDATA[%s]]></MsgType>
+                        <Content><![CDATA[%s]]></Content>
+                    </xml>";
 		$info = sprintf($template,$toUser, $fromUser, time(), $msgType, $content);
 		echo $info;
 	}

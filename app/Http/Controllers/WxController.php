@@ -176,29 +176,28 @@ class WxController extends Controller
 						
 						$content = "错误";
 						echo $this->Text($data,$content);
-					}
+					}elseif($data->Event=='text'){
+						$msg = $data->Content;
+						switch ($msg) {
+							case '在吗':
+								$content = "您好!有什么帮助您的吗";
+								$this->Text($data,$content);
+								break;
+							case '在':
+								$content = "您好!有什么帮助您的吗";
+								$this->Text($data,$content);
+								break;
+							case '红包':
+								$content = "想的挺美,天上有掉馅饼的好事么ლ(′◉❥◉｀ლ)";
+								$this->Text($data,$content);
+								break;
+							default:
+								$content = "欢迎您!";
+								$this->Text($data,$content);
+								break;
+						}
 
 				break;
-			}elseif($data->Event=='text'){
-				$msg = $data->Content;
-				switch ($msg) {
-					case '在吗':
-						$content = "您好!有什么帮助您的吗";
-						$this->Text($data,$content);
-						break;
-					case '在':
-						$content = "您好!有什么帮助您的吗";
-						$this->Text($data,$content);
-						break;
-					case '红包':
-						$content = "想的挺美,天上有掉馅饼的好事么ლ(′◉❥◉｀ლ)";
-						$this->Text($data,$content);
-						break;
-					default:
-						$content = "欢迎您!";
-						$this->Text($data,$content);
-						break;
-				}
 			}
 		}
 	}

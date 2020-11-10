@@ -127,7 +127,7 @@ class WxController extends Controller
 					$eventKey = $data->EventKey;
 					switch ($eventKey) {
 						case 'V1001_TODAY_MUSIC':
-							$array = ['鹦鹉','水瓶','拥抱夏天'];
+							$array = ['鹦鹉','水瓶','绿色'];
 							$content = $array[array_rand($array)];
 							$this->Text($data,$content);
 							break;

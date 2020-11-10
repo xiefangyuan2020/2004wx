@@ -117,7 +117,8 @@ class WxController extends Controller
 			if (strtolower($data->MsgType) == "event") {
 				//关注
 				if (strtolower($data->Event == 'subscribe')) {
-					$content = "欢迎您的关注";
+					$array = ['欢迎您的关注','茶花小铺欢迎您','有什么帮助您的吗?'];
+                    $content = $array[array_rand($array)];
 					echo $this->Text($data,$content);
 				}
 

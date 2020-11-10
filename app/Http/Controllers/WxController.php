@@ -123,6 +123,28 @@ class WxController extends Controller
 					echo $this->Text($data,$content);
 				}
 
+				// elseif($data->Event=='text'){
+				// 	$msg = $data->Content;
+				// 	switch ($msg) {
+				// 		case '在吗':
+				// 			$content = "您好!有什么帮助您的吗";
+				// 			$this->Text($data,$content);
+				// 			break;
+				// 		case '在':
+				// 			$content = "您好!有什么帮助您的吗";
+				// 			$this->Text($data,$content);
+				// 			break;
+				// 		case '红包':
+				// 			$content = "想的挺美,天上有掉馅饼的好事么ლ(′◉❥◉｀ლ)";
+				// 			$this->Text($data,$content);
+				// 			break;
+				// 		default:
+				// 			$content = "欢迎您!";
+				// 			$this->Text($data,$content);
+				// 			break;
+				// 	}
+				// }
+
 				//自定义菜单栏
 				if(strtolower($data->Event=='CLICK')){
 					$eventKey = $data->EventKey;
@@ -172,34 +194,9 @@ class WxController extends Controller
 								$content .= $v["direct"]."\n";
 							}
 						echo $this->Text($data,$content);
-					}else{
-						
-						$content = "错误";
-						echo $this->Text($data,$content);
-						break;
-					}elseif($data->Event=='text'){
-						$msg = $data->Content;
-						switch ($msg) {
-							case '在吗':
-								$content = "您好!有什么帮助您的吗";
-								$this->Text($data,$content);
-								break;
-							case '在':
-								$content = "您好!有什么帮助您的吗";
-								$this->Text($data,$content);
-								break;
-							case '红包':
-								$content = "想的挺美,天上有掉馅饼的好事么ლ(′◉❥◉｀ლ)";
-								$this->Text($data,$content);
-								break;
-							default:
-								$content = "欢迎您!";
-								$this->Text($data,$content);
-								break;
-						}
 					}
 
-				
+				break;
 			}
 		}
 	}

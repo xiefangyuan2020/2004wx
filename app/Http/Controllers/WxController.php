@@ -194,14 +194,12 @@ class WxController extends Controller
 								$content .= $v["direct"]."\n";
 							}
 						echo $this->Text($data,$content);
-					}
-
-					break;
-					case '在吗':
+					}else{
+						case '在吗':
 							$content = "您好!有什么帮助您的吗";
 							$this->Text($data,$content);
-					break;
-					case '在':
+							break;
+						case '在':
 							$content = "您好!有什么帮助您的吗";
 							$this->Text($data,$content);
 							break;
@@ -213,6 +211,8 @@ class WxController extends Controller
 							$content = "欢迎您!";
 							$this->Text($data,$content);
 							break;
+					}
+				break;
 			}
 		}
 	}

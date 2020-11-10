@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
 use GuzzleHttp\Client;
@@ -130,6 +131,12 @@ class WxController extends Controller
 							$array = ['鹦鹉','水瓶','绿色'];
 							$content = $array[array_rand($array)];
 							$this->Text($data,$content);
+							break;
+						case 'V1001_GOOD':
+							$count = Cache::add('good',1)?:Cache::increment('goods');
+							$content = '点赞人数:'.$count;
+							$this->Text($data,$content);
+						default:
 							break;
 					}
 				}

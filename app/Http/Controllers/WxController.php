@@ -172,6 +172,11 @@ class WxController extends Controller
 								$content .= $v["direct"]."\n";
 							}
 						echo $this->Text($data,$content);
+					}else{
+						
+						$content = "错误";
+						echo $this->Text($data,$content);
+						break;
 					}elseif($data->Event=='text'){
 						$msg = $data->Content;
 						switch ($msg) {
@@ -194,7 +199,7 @@ class WxController extends Controller
 						}
 					}
 
-				break;
+				
 			}
 		}
 	}

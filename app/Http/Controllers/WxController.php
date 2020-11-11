@@ -143,8 +143,8 @@ class WxController extends Controller
                     }else{
                     	//如果查询不到说明是个新用户
                     	Fans::create($result);
-                    	$array = ['欢迎欣欣的关注','欣欣是傻逼'];
-                    	// $content = "欢迎您的关注,我们竭诚为您服务!";
+                    	$array = ['欢迎您的关注,我们竭诚为您服务!','茶花小铺欢迎您','鸭精是胖猪'];
+                    	// $content = "";
                     	$content = $array[array_rand($array)];
                     }
                     $this->Text($data,$content);

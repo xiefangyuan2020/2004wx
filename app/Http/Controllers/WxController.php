@@ -50,11 +50,12 @@ class WxController extends Controller
 			// $response = file_get_contents($url);
 			//echo $response;
 
-			//使用guzzle发起get请求
-		    $client = new Client(); //实例化 客户端
-		    $response = $client->request('GET',$url,['verify'=>false]); //发起请求并接收响应
-		    $json_str = $response->getBody();  //服务器的响应数据
-		    //echo $json_str;die;
+			// //使用guzzle发起get请求
+		 //    $client = new Client(); //实例化 客户端
+		 //    $response = $client->request('GET',$url,['verify'=>false]); //发起请求并接收响应
+		 //    $json_str = $response->getBody();  //服务器的响应数据
+		 //    //echo $json_str;die;
+			$json_str=$this->http_get($url);
 
 
 			$data = json_decode($json_str, true);

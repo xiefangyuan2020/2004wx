@@ -143,7 +143,7 @@ class WxController extends Controller
                     }else{
                     	//如果查询不到说明是个新用户
                     	Fans::create($result);
-                    	$array = ['欢迎您的关注,我们竭诚为您服务!','茶花小铺欢迎您','鸭精是胖猪'];
+                    	$array = ['欣崽是狗','茶花小铺欢迎您','鸭精是胖猪'];
                     	// $content = "";
                     	$content = $array[array_rand($array)];
                     }
@@ -165,7 +165,7 @@ class WxController extends Controller
 					$eventKey = $data->EventKey;
 					switch ($eventKey) {
 						case 'V1001_TODAY_MUSIC':
-							$array = ['鹦鹉','水瓶','绿色'];
+							$array = ['http://music.163.com/song?id=1321392802&userid=1973187599','水瓶','绿色'];
 							$content = $array[array_rand($array)];
 							$this->Text($data,$content);
 							break;

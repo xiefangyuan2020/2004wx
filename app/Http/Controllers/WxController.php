@@ -138,11 +138,14 @@ class WxController extends Controller
                     	//如果查询导数据，说明之前用户关注过，又从新关注
                     	$fans->status = 1;
                     	$fans->save();
-                    	$content = "欢迎回来,我们将继续为您服务";
+                    	$array = ['欢迎回来,我们将继续为您服务','回来就不要走喽哦,还有更多惊喜等着您!'];
+                    	$content = $array[array_rand($array)];
                     }else{
                     	//如果查询不到说明是个新用户
                     	Fans::create($result);
-                    	$content = "欢迎您的关注,我们竭诚为您服务!";
+                    	$array = ['欢迎欣欣的关注','欣欣是傻逼'];
+                    	// $content = "欢迎您的关注,我们竭诚为您服务!";
+                    	$content = $array[array_rand($array)];
                     }
                     $this->Text($data,$content);
 

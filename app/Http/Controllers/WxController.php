@@ -148,12 +148,12 @@ class WxController extends Controller
 
 				}
 				//取消关注事件
-				// if($data->Event=="unsubscribe"){
-				// 	$openid = $data->FromUserName;
-				// 	$fans = Fans::where("openid",$openid)->first();
-				// 	$fans->status=0;
-				// 	$fans->save();
-				// }
+				 if($data->Event=="unsubscribe"){
+				 	$openid = $data->FromUserName;
+				 	$fans = Fans::where("openid",$openid)->first();
+				 	$fans->status=0;
+				 	$fans->save();
+				 }
 
 				
 

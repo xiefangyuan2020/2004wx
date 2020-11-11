@@ -55,7 +55,7 @@ class WxController extends Controller
 		 //    $response = $client->request('GET',$url,['verify'=>false]); //发起请求并接收响应
 		 //    $json_str = $response->getBody();  //服务器的响应数据
 		 //    //echo $json_str;die;
-			$json_str=$this->http_get($url);
+			$json_str=file_get_contents($url);
 
 
 			$data = json_decode($json_str, true);
@@ -130,7 +130,7 @@ class WxController extends Controller
 					$openid = $data->FromUserName;
 					$url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=".$openid."&lang=zh_CN";
                     $url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=".$access_token."&openid=".$openid."&lang=zh_CN";
-                    $result = $this->http_get($url);
+                    $result = file_get_contents($url);
                     $result = json_decode($result,true);
                     //将用户存到数据库
                     $fans = Fans::where("openid",$openid)->first();

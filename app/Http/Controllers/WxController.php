@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
+use App\Fans;
 
 use GuzzleHttp\Client;
 
@@ -118,33 +119,41 @@ class WxController extends Controller
 			if (strtolower($data->MsgType) == "event") {
 				//关注
 				if (strtolower($data->Event == 'subscribe')) {
-					$array = ['欢迎您的关注','茶花小铺欢迎您','有什么帮助您的吗?'];
-                    $content = $array[array_rand($array)];
-					echo $this->Text($data,$content);
+					// $array = ['欢迎您的关注','茶花小铺欢迎您','有什么帮助您的吗?'];
+     //                $content = $array[array_rand($array)];
+					// echo $this->Text($data,$content);
+
+					//1、获取调动接口
+					$access_token = $this->getAccessToken();
+					//2、调用接口获取用户信息
+					$openid = $data->FromUserName;
+					$url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=".$openid."&lang=zh_CN";
+                    $url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=".$access_token."&openid=".$openid."&lang=zh_CN";
+                    $result = $this->http_get($url);
+                    $result = json_decode($result,true);
+                    //将用户存到数据库
+                    $fans = Fans::where("openid",$openid)->first();
+                    if($fans){
+                    	//如果查询导数据，说明之前用户关注过，又从新关注
+                    	$fans->status = 1;
+                    	$fans->save();
+                    	$content = "欢迎回来,我们将继续为您服务";
+                    }else{
+                    	//如果查询不到说明是个新用户
+                    	Fans::create($result);
+                    	$content = "欢迎您的关注,我们竭诚为您服务!";
+                    }
+                    $this->Text($data,$content);
+
+				}
+				//取消关注事件
+				if($data->Event=="unsubscribe"){
+					$openid = $data->FromUserName;
+					$fans = Fans::where("openid",$openid)->first();
+					$fans->status=0;
+					$fans->save();
 				}
 
-				//文本回复
-				// if($data->Event=='text'){
-				// 	$msg = $data->Content;
-				// 	switch ($msg) {
-				// 		case '在吗':
-				// 			$content = "您好!有什么帮助您的吗";
-				// 			$this->Text($data,$content);
-				// 			break;
-				// 		case '在':
-				// 			$content = "您好!有什么帮助您的吗";
-				// 			$this->Text($data,$content);
-				// 			break;
-				// 		case '红包':
-				// 			$content = "想的挺美,天上有掉馅饼的好事么ლ(′◉❥◉｀ლ)";
-				// 			$this->Text($data,$content);
-				// 			break;
-				// 		default:
-				// 			$content = "欢迎您!";
-				// 			$this->Text($data,$content);
-				// 			break;
-				// 	}
-				// }
 				
 
 				//自定义菜单栏
@@ -275,3 +284,26 @@ class WxController extends Controller
 
 }
 
+
+				//文本回复
+				// if($data->Event=='text'){
+				// 	$msg = $data->Content;
+				// 	switch ($msg) {
+				// 		case '在吗':
+				// 			$content = "您好!有什么帮助您的吗";
+				// 			$this->Text($data,$content);
+				// 			break;
+				// 		case '在':
+				// 			$content = "您好!有什么帮助您的吗";
+				// 			$this->Text($data,$content);
+				// 			break;
+				// 		case '红包':
+				// 			$content = "想的挺美,天上有掉馅饼的好事么ლ(′◉❥◉｀ლ)";
+				// 			$this->Text($data,$content);
+				// 			break;
+				// 		default:
+				// 			$content = "欢迎您!";
+				// 			$this->Text($data,$content);
+				// 			break;
+				// 	}
+				// }

@@ -251,7 +251,7 @@ class WxController extends Controller
      if(empty($res)){   //如果没有的话就执行添加
          $url="https://api.weixin.qq.com/cgi-bin/media/get?access_token=".$token."&media_id=".$data->MediaId;
          $url=file_get_contents($url);
-         $obj=[           //类型公用的   然后类型不一样的往$data里面插数据
+         $rey=[           //类型公用的   然后类型不一样的往$data里面插数据
              "time"=>time(),
              "msg_type"=>$data->MsgType,
              "openid"=>$data->FromUserName,
@@ -260,30 +260,30 @@ class WxController extends Controller
          //图片
          if($data->MsgType=="image"){
              $file_type = '.jpg';
-             $data["url"] = $data->PicUrl;
-                $data["media_id"] = $data->MediaId;
+             $rey["url"] = $data->PicUrl;
+                $rey["media_id"] = $data->MediaId;
          }
          //视频
          if($data->MsgType=="video"){
              $file_type = '.mp4';
-             $data["media_id"]=$data->MediaId;
+             $rey["media_id"]=$data->MediaId;
 
          }
 //         文本
          if($data->MsgType=="text"){
              $file_type = '.txt';
-             $data["content"]=$data->Content;
+             $rey["content"]=$data->Content;
          }
          //音频
          if($data->MsgType=="voice"){
              $file_type = '.amr';
-             $data["media_id"]=$data->MediaId;
+             $rey["media_id"]=$data->MediaId;
 
          }
          if(!empty($file_type)){    //如果不是空的这下载
              file_put_contents("dwaw".$file_type,$url);
          }
-         Media::create($data);
+         Media::create($rey);
 
 
      }else{

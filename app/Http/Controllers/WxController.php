@@ -181,23 +181,23 @@ class WxController extends Controller
 
 
 
-				if($data->MsgType=="text"){
-					$content = trim($data->Content);
-					$keywords = Keywords::where("keywords",$content)->first();
-					if($keywords){
-						switch ($keywords->type) {
-							case 'text':
-								$this->Text($data,$keywords->media_id);
-								break;
-							case "image": //回复图片
-								$this->Image($data,$keywords->media_id);
-								break;
-						}
-					}else{
-						$content .= "回复1--校园风采\n";
-						$this->Text($data,$content);
-					}
-				}			
+				// if($data->MsgType=="text"){
+				// 	$content = trim($data->Content);
+				// 	$keywords = Keywords::where("keywords",$content)->first();
+				// 	if($keywords){
+				// 		switch ($keywords->type) {
+				// 			case 'text':
+				// 				$this->Text($data,$keywords->media_id);
+				// 				break;
+				// 			case "image": //回复图片
+				// 				$this->Image($data,$keywords->media_id);
+				// 				break;
+				// 		}
+				// 	}else{
+				// 		$content .= "回复1--校园风采\n";
+				// 		$this->Text($data,$content);
+				// 	}
+				// }			
 				
 
 			}

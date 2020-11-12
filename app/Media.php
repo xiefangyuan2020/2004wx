@@ -8,6 +8,7 @@ class Media extends Model
 {
     protected $table = 'media';
     public $primaryKey = "id";
-    //public $timestamps = false;
+    public $timestamps = false;
     protected $guarded=[];
+    protected $fillable = ['time'];
 }

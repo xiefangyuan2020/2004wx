@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use App\Fans;
-use App\Keywords;
 use App\Media;
 
 use GuzzleHttp\Client;

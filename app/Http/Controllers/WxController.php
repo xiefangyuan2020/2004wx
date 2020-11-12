@@ -29,9 +29,7 @@ class WxController extends Controller
 		if ($tmpStr == $signature) {
 			echo $_GET['echostr'];
 		} else {
-			if($obj->Event!="subscribe" && $obj->Event!="unsubscribe"){   //不是关注 也不是取消关注的
-			    $this->typeContent($obj);         //先调用这方法 判断是什么类型 ，在添加数据库9
-			}
+			echo "111";
 		}
 	}
 
@@ -249,7 +247,7 @@ class WxController extends Controller
 	//素材
 	 public  function typeContent($data){
      $res=Media::where("media_id",$data->MediaId)->first();
-     $token=$this->getAccesstoken();     //获取token
+     $token=$this->getAccessToken();     //获取token
      if(empty($res)){   //如果没有的话就执行添加
          $url="https://api.weixin.qq.com/cgi-bin/media/get?access_token=".$token."&media_id=".$data->MediaId;
          $url=file_get_contents($url);

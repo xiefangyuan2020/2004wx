@@ -108,13 +108,15 @@ class WxController extends Controller
 		$tmpStr = implode($tmpArr);
 		$tmpStr = sha1($tmpStr);
 
+		
+		//1.接收数据
+		$xml_str = file_get_contents('php://input');
+			
+		//记录日志
+        file_put_contents('wx_event.log',$xml_str."\n\n",'FILE_APPEND');
+
 		if ($tmpStr == $signature) {  //验证通过
-			//1.接收数据
-			$xml_str = file_get_contents('php://input');
-			//记录日志
-//            file_put_contents('wx_event.log',$xml_str,'FILE_APPEND');
-//            echo "$echostr";
-//            die;
+
 			//2.把xml文本转换成php的数组或者对象
 			$data = simplexml_load_string($xml_str, 'SimpleXMLElement', LIBXML_NOCDATA);
 			if($data->Event!="subscribe" && $data->Event!="unsubscribe"){   //不是关注 也不是取消关注的

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use App\Fans;
 use App\Keywords;
+use App\Media;
 
 use GuzzleHttp\Client;
 
@@ -151,7 +152,8 @@ class WxController extends Controller
                     $this->Text($data,$content);
 
 				}
-				//取消关注事件
+				//取消关注事件\
+
 				 if($data->Event=="unsubscribe"){
 				 	$openid = $data->FromUserName;
 				 	$fans = Fans::where("openid",$openid)->first();
@@ -198,14 +200,12 @@ class WxController extends Controller
 				// 		$this->Text($data,$content);
 				// 	}
 				// }			
-				
+
 
 			}
 
 
-			
-
-
+			$obj = [];
 			switch($data->MsgType){
 				case "text":
 					//把天气截取出来，后面是天气的地址
@@ -243,6 +243,55 @@ class WxController extends Controller
 		}
 	}
 
+
+	//素材入库
+	 public  function typeContent($obj){
+     $res=Media::where("media_id",$obj->MediaId)->first();
+     $token=$this->getAccesstoken();     //获取token
+     if(empty($res)){   //如果没有的话就执行添加
+         $url="https://api.weixin.qq.com/cgi-bin/media/get?access_token=".$token."&media_id=".$obj->MediaId;
+         $url=file_get_contents($url);
+         $data=[           //类型公用的   然后类型不一样的往$data里面插数据
+             "time"=>time(),
+             "msg_type"=>$obj->MsgType,
+             "openid"=>$obj->FromUserName,
+             "msg_id"=>$obj->MsgId
+         ];
+         //图片
+         if($obj->MsgType=="image"){
+             $file_type = '.jpg';
+             $data["url"] = $obj->PicUrl;
+                $data["media_id"] = $obj->MediaId;
+         }
+         //视频
+         if($obj->MsgType=="video"){
+             $file_type = '.mp4';
+             $data["media_id"]=$obj->MediaId;
+
+         }
+//         文本
+         if($obj->MsgType=="text"){
+             $file_type = '.txt';
+             $data["content"]=$obj->Content;
+         }
+         //音频
+         if($obj->MsgType=="voice"){
+             $file_type = '.amr';
+             $data["media_id"]=$obj->MediaId;
+
+         }
+         if(!empty($file_type)){    //如果不是空的这下载
+             file_put_contents("dwaw".$file_type,$url);
+         }
+         Media::create($data);
+
+
+     }else{
+        return $res;
+     }
+
+     return true;
+ }
 
 	//自定义菜单栏
 	public function createMenu(){
@@ -330,27 +379,3 @@ class WxController extends Controller
 
 
 }
-
-
-				//文本回复
-				// if($data->Event=='text'){
-				// 	$msg = $data->Content;
-				// 	switch ($msg) {
-				// 		case '在吗':
-				// 			$content = "您好!有什么帮助您的吗";
-				// 			$this->Text($data,$content);
-				// 			break;
-				// 		case '在':
-				// 			$content = "您好!有什么帮助您的吗";
-				// 			$this->Text($data,$content);
-				// 			break;
-				// 		case '红包':
-				// 			$content = "想的挺美,天上有掉馅饼的好事么ლ(′◉❥◉｀ლ)";
-				// 			$this->Text($data,$content);
-				// 			break;
-				// 		default:
-				// 			$content = "欢迎您!";
-				// 			$this->Text($data,$content);
-				// 			break;
-				// 	}
-				// }

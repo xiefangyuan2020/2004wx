@@ -29,7 +29,9 @@ class WxController extends Controller
 		if ($tmpStr == $signature) {
 			echo $_GET['echostr'];
 		} else {
-			echo "111";
+			if($obj->Event!="subscribe" && $obj->Event!="unsubscribe"){   //不是关注 也不是取消关注的
+			    $this->typeContent($obj);         //先调用这方法 判断是什么类型 ，在添加数据库9
+			}
 		}
 	}
 

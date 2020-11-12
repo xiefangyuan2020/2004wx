@@ -9,4 +9,5 @@ class Media extends Model
     protected $table = 'media';
     public $primaryKey = "id";
     public $timestamps = false;
+    protected $guarded=[];
 }

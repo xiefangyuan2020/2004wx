@@ -205,7 +205,7 @@ class WxController extends Controller
 			}
 
 
-			$obj = [];
+			
 			switch($data->MsgType){
 				case "text":
 					//把天气截取出来，后面是天气的地址
@@ -244,40 +244,40 @@ class WxController extends Controller
 	}
 
 
-	//素材入库
-	 public  function typeContent($obj){
-     $res=Media::where("media_id",$obj->MediaId)->first();
+	//素材
+	 public  function typeContent($data){
+     $res=Media::where("media_id",$data->MediaId)->first();
      $token=$this->getAccesstoken();     //获取token
      if(empty($res)){   //如果没有的话就执行添加
-         $url="https://api.weixin.qq.com/cgi-bin/media/get?access_token=".$token."&media_id=".$obj->MediaId;
+         $url="https://api.weixin.qq.com/cgi-bin/media/get?access_token=".$token."&media_id=".$data->MediaId;
          $url=file_get_contents($url);
-         $data=[           //类型公用的   然后类型不一样的往$data里面插数据
+         $obj=[           //类型公用的   然后类型不一样的往$data里面插数据
              "time"=>time(),
-             "msg_type"=>$obj->MsgType,
-             "openid"=>$obj->FromUserName,
-             "msg_id"=>$obj->MsgId
+             "msg_type"=>$data->MsgType,
+             "openid"=>$data->FromUserName,
+             "msg_id"=>$data->MsgId
          ];
          //图片
-         if($obj->MsgType=="image"){
+         if($data->MsgType=="image"){
              $file_type = '.jpg';
-             $data["url"] = $obj->PicUrl;
-                $data["media_id"] = $obj->MediaId;
+             $data["url"] = $data->PicUrl;
+                $data["media_id"] = $data->MediaId;
          }
          //视频
-         if($obj->MsgType=="video"){
+         if($data->MsgType=="video"){
              $file_type = '.mp4';
-             $data["media_id"]=$obj->MediaId;
+             $data["media_id"]=$data->MediaId;
 
          }
 //         文本
-         if($obj->MsgType=="text"){
+         if($data->MsgType=="text"){
              $file_type = '.txt';
-             $data["content"]=$obj->Content;
+             $data["content"]=$data->Content;
          }
          //音频
-         if($obj->MsgType=="voice"){
+         if($data->MsgType=="voice"){
              $file_type = '.amr';
-             $data["media_id"]=$obj->MediaId;
+             $data["media_id"]=$data->MediaId;
 
          }
          if(!empty($file_type)){    //如果不是空的这下载

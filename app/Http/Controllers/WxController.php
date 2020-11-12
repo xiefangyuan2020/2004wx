@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use App\Fans;
+use App\Keywords;
 
 use GuzzleHttp\Client;
 
@@ -181,6 +182,25 @@ class WxController extends Controller
 			}
 
 
+			if($data->MsgType=="text"){
+				$content = trim($data->Content);
+				$keywords = Keywords::where("keywords",$content)->first();
+				if($keywords){
+					switch ($keywords->type) {
+						case 'text':
+							$this->Text($data,$keywords->media_id);
+							break;
+						case "image": //回复图片
+							$this->Image($data,$keywords->media_id);
+							break;
+					}
+				}else{
+					$content .= "回复1--校园风采\n";
+					$this->Text($data,$content);
+				}
+			}			
+
+
 			switch($data->MsgType){
 				case "text":
 					//把天气截取出来，后面是天气的地址
@@ -265,6 +285,24 @@ class WxController extends Controller
                     </xml>";
 		$info = sprintf($template,$toUser, $fromUser, time(), $msgType, $content);
 		echo $info;
+	}
+
+	//回复图片消息
+	private function Image($data,$media_id){
+		$fromUserName = $obj->ToUserName;
+        $toUserName = $obj->FromUserName;
+        $time = time();
+        $msgType = "image";
+        $xml = "<xml>
+                    <ToUserName><![CDATA[%s]]></ToUserName>
+                    <FromUserName><![CDATA[%s]]></FromUserName>
+                    <CreateTime>%s</CreateTime>
+                    <MsgType><![CDATA[%s]]></MsgType>
+                    <Image>
+                      <MediaId><![CDATA[%s]]></MediaId>
+                    </Image>
+                </xml>";
+        echo sprintf($xml,$toUserName,$fromUserName,$time,$msgType,$media_id);
 	}
 
 

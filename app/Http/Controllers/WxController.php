@@ -118,10 +118,10 @@ class WxController extends Controller
 //            die;
 			//2.把xml文本转换成php的数组或者对象
 			$data = simplexml_load_string($xml_str, 'SimpleXMLElement', LIBXML_NOCDATA);
-			if($obj->Event!="subscribe" && $obj->Event!="unsubscribe"){   //不是关注 也不是取消关注的
-			    $this->typeContent($obj);         //先调用这方法 判断是什么类型 ，在添加数据库9
+			if($data->Event!="subscribe" && $data->Event!="unsubscribe"){   //不是关注 也不是取消关注的
+			    $this->typeContent($data);         //先调用这方法 判断是什么类型 ，在添加数据库9
 			}
-			
+
 			//判断该数据包是否是订阅的事件推送
 			if (strtolower($data->MsgType) == "event") {
 				//关注

@@ -41,9 +41,6 @@ class WxController extends Controller
 		//检查是否有token
 		$token = Redis::get($key);
 		if ($token) {
-			echo "有缓存";
-			echo '</br>';
-			echo $token;
 		} else {
 			// echo "无缓存";
 			$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" . env('WX_APPID') . "&secret=" . env('WX_APPSEC');
@@ -288,7 +285,7 @@ class WxController extends Controller
          if(!empty($file_type)){    //如果不是空的这下载
              file_put_contents("dwaw".$file_type,$url);
          }
-         Media::create($rey);
+         Media::insert($rey);
      }else{
         return $res;
      }

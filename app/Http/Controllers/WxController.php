@@ -186,27 +186,6 @@ class WxController extends Controller
 					}
 				}
 
-
-
-				// if($data->MsgType=="text"){
-				// 	$content = trim($data->Content);
-				// 	$keywords = Keywords::where("keywords",$content)->first();
-				// 	if($keywords){
-				// 		switch ($keywords->type) {
-				// 			case 'text':
-				// 				$this->Text($data,$keywords->media_id);
-				// 				break;
-				// 			case "image": //回复图片
-				// 				$this->Image($data,$keywords->media_id);
-				// 				break;
-				// 		}
-				// 	}else{
-				// 		$content .= "回复1--校园风采\n";
-				// 		$this->Text($data,$content);
-				// 	}
-				// }			
-
-
 			}
 
 
@@ -266,12 +245,14 @@ class WxController extends Controller
          if($data->MsgType=="image"){
              $file_type = '.jpg';
              $rey["url"] = $data->PicUrl;
-                $rey["media_id"] = $data->MediaId;
+             $rey["media_id"] = $data->MediaId;
+             Media::insert($rey);
          }
          //视频
          if($data->MsgType=="video"){
              $file_type = '.mp4';
              $rey["media_id"]=$data->MediaId;
+             Media::insert($rey);
 
          }
 //         文本
@@ -283,6 +264,7 @@ class WxController extends Controller
          if($data->MsgType=="voice"){
              $file_type = '.amr';
              $rey["media_id"]=$data->MediaId;
+             Media::insert($rey);
 
          }
          $path = 'wxmedia';
@@ -290,7 +272,7 @@ class WxController extends Controller
              file_put_contents("file".$file_type,$url);
          }
          
-         Media::insert($rey);
+         
      }else{
         return $res;
      }
@@ -345,24 +327,6 @@ class WxController extends Controller
 		$info = sprintf($template,$toUser, $fromUser, time(), $msgType, $content);
 		echo $info;
 	}
-
-	//回复图片消息
-	// private function Image($data,$media_id){
-	// 	$fromUserName = $obj->ToUserName;
- //        $toUserName = $obj->FromUserName;
- //        $time = time();
- //        $msgType = "image";
- //        $xml = "<xml>
- //                    <ToUserName><![CDATA[%s]]></ToUserName>
- //                    <FromUserName><![CDATA[%s]]></FromUserName>
- //                    <CreateTime>%s</CreateTime>
- //                    <MsgType><![CDATA[%s]]></MsgType>
- //                    <Image>
- //                      <MediaId><![CDATA[%s]]></MediaId>
- //                    </Image>
- //                </xml>";
- //        echo sprintf($xml,$toUserName,$fromUserName,$time,$msgType,$media_id);
-	// }
 
 
 	public function curl($url,$menu){

@@ -285,8 +285,9 @@ class WxController extends Controller
              $rey["media_id"]=$data->MediaId;
 
          }
+         $path = 'wxmedia';
          if(!empty($file_type)){    //如果不是空的这下载
-             file_put_contents("dwaw".$file_type,$url);
+             file_put_contents("/wxmedia/file".$file_type,$url);
          }
          
          Media::insert($rey);

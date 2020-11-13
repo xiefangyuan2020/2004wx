@@ -95,9 +95,12 @@ class WxController extends Controller
 	public function wxEvent(Request $request)
 	{
 		$echostr = $request->echostr;
-		$signature = $_GET["signature"];
-		$timestamp = $_GET["timestamp"];
-		$nonce = $_GET["nonce"];
+		// $signature = $_GET["signature"];
+		// $timestamp = $_GET["timestamp"];
+		// $nonce = $_GET["nonce"];
+		$signature = request()->get("signature");
+		$timestamp = request()->get("timestamp");
+		$nonce = request()->get("nonce");
 
 		$token = env('WX_TOkEN');
 		$tmpArr = array($token, $timestamp, $nonce);
@@ -125,7 +128,7 @@ class WxController extends Controller
 				//关注
 				if (strtolower($data->Event == 'subscribe')) {
 					// $array = ['欢迎您的关注','茶花小铺欢迎您','有什么帮助您的吗?'];
-     //                $content = $array[array_rand($array)];
+                    //  $content = $array[array_rand($array)];
 					// echo $this->Text($data,$content);
 
 					//1、获取调动接口
@@ -147,7 +150,7 @@ class WxController extends Controller
                     }else{
                     	//如果查询不到说明是个新用户
                     	Fans::create($result);
-                    	$array = ['欣崽是狗','茶花小铺欢迎您','鸭精是胖猪'];
+                    	$array = ['欢迎您的关注','茶花小铺欢迎您','您好!有什么帮助您的吗?'];
                     	// $content = "";
                     	$content = $array[array_rand($array)];
                     }
@@ -285,6 +288,7 @@ class WxController extends Controller
          if(!empty($file_type)){    //如果不是空的这下载
              file_put_contents("dwaw".$file_type,$url);
          }
+         
          Media::insert($rey);
      }else{
         return $res;
@@ -342,22 +346,22 @@ class WxController extends Controller
 	}
 
 	//回复图片消息
-	private function Image($data,$media_id){
-		$fromUserName = $obj->ToUserName;
-        $toUserName = $obj->FromUserName;
-        $time = time();
-        $msgType = "image";
-        $xml = "<xml>
-                    <ToUserName><![CDATA[%s]]></ToUserName>
-                    <FromUserName><![CDATA[%s]]></FromUserName>
-                    <CreateTime>%s</CreateTime>
-                    <MsgType><![CDATA[%s]]></MsgType>
-                    <Image>
-                      <MediaId><![CDATA[%s]]></MediaId>
-                    </Image>
-                </xml>";
-        echo sprintf($xml,$toUserName,$fromUserName,$time,$msgType,$media_id);
-	}
+	// private function Image($data,$media_id){
+	// 	$fromUserName = $obj->ToUserName;
+ //        $toUserName = $obj->FromUserName;
+ //        $time = time();
+ //        $msgType = "image";
+ //        $xml = "<xml>
+ //                    <ToUserName><![CDATA[%s]]></ToUserName>
+ //                    <FromUserName><![CDATA[%s]]></FromUserName>
+ //                    <CreateTime>%s</CreateTime>
+ //                    <MsgType><![CDATA[%s]]></MsgType>
+ //                    <Image>
+ //                      <MediaId><![CDATA[%s]]></MediaId>
+ //                    </Image>
+ //                </xml>";
+ //        echo sprintf($xml,$toUserName,$fromUserName,$time,$msgType,$media_id);
+	// }
 
 
 	public function curl($url,$menu){
